@@ -1,11 +1,10 @@
 # Shiny Data Portal
-A Shiny Application to host, filter, aggregate and and download data in various formats.
+A free Shiny Application to host, filter, aggregate and and download data in various formats. It can easily be adapted for any purpose and used with any data that can be converted to tidy data frames (spreadsheet format). 
 
 ***
 
-This folder contains the code to create a simple web-application 
-to host and download data in a unified format. The application is 
-developed using the 'shiny' R package. It can be deployed to a free
+This folder contains the code to create the application as shown: . 
+The application is developed using the 'shiny' R package. It can be deployed to a free
 web-server at www.shinyapps.io, or hosted locally using shiny server
 (https://rstudio.com/products/shiny/shiny-server/). 
 
