@@ -1,4 +1,4 @@
-# Shiny data Portal
+# Shiny Data Portal
 A Shiny Application to host, filter, aggregate and and download data in various formats.
 
 ***
