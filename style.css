@@ -111,7 +111,7 @@ h1, h2, h3, h4, h5, h6 {
   height:  90vh !important; 
 } 
 
-/* Correct line-wrapping or radio buttons: https://stackoverflow.com/questions/25730961/bootstrap-radio-inline-line-wrapping-and-stacked-radio-buttons/25732098 */ 
+/* Correct line-wrapping of radio buttons: https://stackoverflow.com/questions/25730961/bootstrap-radio-inline-line-wrapping-and-stacked-radio-buttons/25732098 */ 
 .radio-inline+.radio-inline {
     margin-left: 0;
 }
