@@ -23,7 +23,7 @@ observe({
 })
 
 # This fetches the right dataset, for any dataset of any source requested. 
-# For some datasets, we can provide various versions. This needs to be implemented in ui.R as well through a conditional panel. 
+# For some datasets, we can provide various versions. This needs to be implemented in ui_code.R as well through a conditional panel. 
 datasetInput <- reactive({ # RAW INPUT DATSAET
   switch(input$dataset,
          "Selected Macroeconomic Indicators" = switch(input$SMSfrequency, Monthly = BOU_MMI, `Annual CY` = BOU_MMI_A, `Annual FY` = BOU_MMI_AF),
