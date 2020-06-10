@@ -113,12 +113,12 @@ long2wide <- function(X, id_cols, names_from, values_from, labels_from = NULL, d
 
 # Selected Monthly Macroeconomic Indicators --------------------------------------
 link_BOU_MMI <- "https://www.bou.or.ug/bou/bouwebsite/bouwebsitecontent/statistics/MacroeconomicIndicators/Disseminated-Indicators-file_Web-version.xlsx"
-download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
+download.file(link_BOU_MMI, destfile = "rawdata/BOU_MMI.xlsx", mode = 'wb')
 
   # Monthly  
-  BOU_MMI <- rm_miss(read_excel("data/raw/BOU_MMI.xlsx", skip = 3))
+  BOU_MMI <- rm_miss(read_excel("rawdata/BOU_MMI.xlsx", skip = 3))
   BOU_MMI <- rm_miss(get_vars(BOU_MMI, -1))
-  BOU_MMI_labs <- read_excel("data/raw/BOU_MMI_labels.xlsx")
+  BOU_MMI_labs <- read_excel("rawdata/BOU_MMI_labels.xlsx")
   if(nrow(BOU_MMI) != nrow(BOU_MMI_labs)) stop("Names and size of data does not match")
   BOU_MMI <- transpose(cbind(BOU_MMI_labs[1], BOU_MMI), keep.names = "Date", make.names = 1)
   vlabels(BOU_MMI)[-1] <- BOU_MMI_labs[[2]]
@@ -127,7 +127,7 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
   attr(BOU_MMI, "updated") <- Sys.Date()
   
   # Annualized
-  BOU_MMI_A <- rm_miss(read_excel("data/raw/BOU_MMI.xlsx", sheet = 2, skip = 3))
+  BOU_MMI_A <- rm_miss(read_excel("rawdata/BOU_MMI.xlsx", sheet = 2, skip = 3))
   BOU_MMI_A <- rm_miss(get_vars(BOU_MMI_A, -1))
   if(nrow(BOU_MMI_A) != nrow(BOU_MMI_labs)) stop("Names and size of data does not match")
   BOU_MMI_A <- transpose(cbind(BOU_MMI_labs[1], BOU_MMI_A), keep.names = "Year", make.names = 1)
@@ -138,7 +138,7 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
   attr(BOU_MMI_A, "updated") <- Sys.Date()
   
   # Annualized FY
-  BOU_MMI_AF <- rm_miss(read_excel("data/raw/BOU_MMI.xlsx", sheet = 3, skip = 4))
+  BOU_MMI_AF <- rm_miss(read_excel("rawdata/BOU_MMI.xlsx", sheet = 3, skip = 4))
   BOU_MMI_AF <- rm_miss(get_vars(BOU_MMI_AF, -1))
   if(nrow(BOU_MMI_AF) != nrow(BOU_MMI_labs)) stop("Names and size of data does not match")
   BOU_MMI_AF <- transpose(cbind(BOU_MMI_labs[1], BOU_MMI_AF), keep.names = "FY", make.names = 1)
@@ -158,10 +158,10 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
   
   # Interest Rates ---------------------------------------------------------
   link_BOU_I <- "https://www.bou.or.ug/bou/bouwebsite/bouwebsitecontent/statistics/InterestRates/Interest_rates.xlsx"
-  download.file(link_BOU_I, destfile = "data/raw/BOU_I.xlsx", mode = 'wb')
+  download.file(link_BOU_I, destfile = "rawdata/BOU_I.xlsx", mode = 'wb')
   
   # Daily interbank rates for Overnight, 7-day and Overall
-  BOU_I <- rm_miss(read_xlsx("data/raw/BOU_I.xlsx", sheet = 2, skip = 3))
+  BOU_I <- rm_miss(read_xlsx("rawdata/BOU_I.xlsx", sheet = 2, skip = 3))
   get_vars(BOU_I, -1) <- dapply(get_vars(BOU_I, -1), as.numeric)
   vlabels(BOU_I)[-1] <- paste("Daily Interbank Money-Market Rates:", names(BOU_I)[-1])
   names(BOU_I)[-1] <- c("I_Overnight","I_7day","I_Overall")
@@ -170,9 +170,9 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
   attr(BOU_I, "updated") <- Sys.Date()
   
   # Monthly Policy, Commercial Bank and Interbank Rates + Annualized Trasury Yields
-  BOU_I_M <- rm_miss(read_xlsx("data/raw/BOU_I.xlsx", sheet = 3, skip = 3))
-  BOU_I_M <- rbind(BOU_I_M, setNames(rm_miss(read_xlsx("data/raw/BOU_I.xlsx", sheet = 5, skip = 3)), names(BOU_I_M)))
-  BOU_I_M_labs <- collapselabels(read_excel("data/raw/BOU_I_labels.xlsx"))
+  BOU_I_M <- rm_miss(read_xlsx("rawdata/BOU_I.xlsx", sheet = 3, skip = 3))
+  BOU_I_M <- rbind(BOU_I_M, setNames(rm_miss(read_xlsx("rawdata/BOU_I.xlsx", sheet = 5, skip = 3)), names(BOU_I_M)))
+  BOU_I_M_labs <- collapselabels(read_excel("rawdata/BOU_I_labels.xlsx"))
   series <- c("Central Bank Rate","Rediscount rate","Bank rate to Commercial Banks","35 Days","63 Days","91 Days","182 Days","273 Days","364 Days",
               "Deposit Rates (WARD)","Demand deposits","Savings deposits","Time Deposits","Time Fixed Deposits","Lending Rates","Overnight","7 Day","Overall")
   ind <- rgrep(series, BOU_I_M[[1]])
@@ -187,7 +187,7 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
   rm(ind, series, BOU_I_M_labs)
   
   # Treasury Bond Interest Rates
-  BOU_I_TB <- rm_miss(read_xlsx("data/raw/BOU_I.xlsx", sheet = 4, skip = 6))
+  BOU_I_TB <- rm_miss(read_xlsx("rawdata/BOU_I.xlsx", sheet = 4, skip = 6))
   BOU_I_TB[[2]] <- as.numeric(gsub("YEARS","",BOU_I_TB[[2]]))
   names(BOU_I_TB)[-1] <- c("Maturity","WAP","YTM")
   vlabels(BOU_I_TB)[-1] <- c("Maturity / Duration / Tenor (years)","Weighted Average Price (WAP)","Yield to Maturity (YTM)")
@@ -199,10 +199,10 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
   
   # Exchange  Rates --------------------------------------
   link_BOU_E <- "https://www.bou.or.ug/bou/bouwebsite/bouwebsitecontent/statistics/Exchange_Rates/Exchange-Rates.xlsx"
-  download.file(link_BOU_E, destfile = "data/raw/BOU_E.xlsx", mode = 'wb')
+  download.file(link_BOU_E, destfile = "rawdata/BOU_E.xlsx", mode = 'wb')
   
   # Daily buying, selling and mid exchange rates
-  BOU_E <- rm_miss(read_xlsx("data/raw/BOU_E.xlsx", sheet = 2, skip = 5))
+  BOU_E <- rm_miss(read_xlsx("rawdata/BOU_E.xlsx", sheet = 2, skip = 5))
   names(BOU_E)[-1] <- c("E_IFEM_B","E_IFEM_S","E_IFEM_MR","E_IFEM_Spread","E_IFEM_DA")
   vlabels(BOU_E)[-1] <- c("Interbank Foreign Exchange Market Buying Rate: Simple Avg. (UgShs/US$)",
                           "Interbank Foreign Exchange Market Selling Rate: Simple Avg. (UgShs/US$)",
@@ -214,11 +214,11 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
   attr(BOU_E, "updated") <- Sys.Date()
   
   # Monthly rates in the forex bureau market and indices
-  BOU_E_M <- rm_miss(read_xlsx("data/raw/BOU_E.xlsx", sheet = 3, skip = 7))
+  BOU_E_M <- rm_miss(read_xlsx("rawdata/BOU_E.xlsx", sheet = 3, skip = 7))
   BOU_E_M <- dapply(BOU_E_M, as.numeric)
   names(BOU_E_M) <- c("Date","E_BWA_B","E_BWA_S","E_BWA_MR","E_OFF_MR","NEER","NEER_Index","REER_Index")
   # getting the other sheeet of monthly Interbank Foreign Exchange Market (IFEM) Rates			
-  temp <- rm_miss(read_xlsx("data/raw/BOU_E.xlsx", sheet = 4, skip = 5))
+  temp <- rm_miss(read_xlsx("rawdata/BOU_E.xlsx", sheet = 4, skip = 5))
   temp <- dapply(temp, as.numeric)
   names(temp) <- c("Date","E_IFEM_B","E_IFEM_S","E_IFEM_Purchases","E_IFEM_Sales","E_IFEM_MR")
   # Joining 
@@ -227,7 +227,7 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
                          "E_BWA_MR","E_OFF_MR","E_IFEM_MR","NEER","NEER_Index","REER_Index",
                          "E_IFEM_Purchases","E_IFEM_Sales"))
   # getting period averages -> E_AV is the same as E_OFF_MR, REER is already there, and EP is not really needed or can be computed from monthly data.
-  temp <- rm_miss(read_xlsx("data/raw/BOU_E.xlsx", sheet = 5, skip = 3))
+  temp <- rm_miss(read_xlsx("rawdata/BOU_E.xlsx", sheet = 5, skip = 3))
   temp <- dapply(transpose(temp[1:2, -1], keep.names = "Date"), as.numeric)
   names(temp) <- c("Date","E_AV","E_EP")
   # Joining and Aggregating non-matches
@@ -251,7 +251,7 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
     
   # Credit to the Private Sector --------------------------------
   link_BOU_PSC <- "https://www.bou.or.ug/bou/bouwebsite/bouwebsitecontent/statistics/MonetaryStatistics/Credit-to-the-Private-Sector.xls"
-  download.file(link_BOU_PSC, destfile = "data/raw/BOU_PSC.xls", mode = 'wb')
+  download.file(link_BOU_PSC, destfile = "rawdata/BOU_PSC.xls", mode = 'wb')
   
   nmn <- function(x, kwd = "Total") { 
     r <- seq_len(grep(kwd, x)[1L])
@@ -267,12 +267,12 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
                  CI_FX = list("Credit Institutions FOREX", 9),
                  MDI = list("Microfinance Deposit Institutions", 5))
   
-  BOU_PSC_labs <- collapselabels(rm_miss(read_excel("data/raw/BOU_PSC_labels.xlsx")), 
+  BOU_PSC_labs <- collapselabels(rm_miss(read_excel("rawdata/BOU_PSC_labels.xlsx")), 
                                  pre = "Credit to Private Sector: ", post = " (million UGX)")
   
   BOU_PSC <- unlist2d(lapply(sheets, function(i) {
     cat(i[[1]], fill = TRUE)
-    temp <- rm_miss(read_excel("data/raw/BOU_PSC.xls", sheet = i[[2]], skip = 3))
+    temp <- rm_miss(read_excel("rawdata/BOU_PSC.xls", sheet = i[[2]], skip = 3))
     temp <- rm_miss(temp[nmn(temp[[grep("Sector", names(temp))]]), grep("Sector", names(temp)):length(temp)])
     if(nrow(temp) != nrow(BOU_PSC_labs)) stop("dimension mismatch")
     temp[[1]] <- BOU_PSC_labs[[1]]
@@ -295,9 +295,9 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
   attr(BOU_PSC_wide, "updated") <- Sys.Date()
   
     # Old Way:
-    # BOU_PSC <- rm_miss(read_excel("data/raw/BOU_PSC.xls", sheet = 2, skip = 3))
+    # BOU_PSC <- rm_miss(read_excel("rawdata/BOU_PSC.xls", sheet = 2, skip = 3))
     # BOU_PSC <- rm_miss(BOU_PSC[nmn(BOU_PSC[[1]]), ])
-    # BOU_PSC_labs <- collapselabels(rm_miss(read_excel("data/raw/BOU_PSC_labels.xlsx")), 
+    # BOU_PSC_labs <- collapselabels(rm_miss(read_excel("rawdata/BOU_PSC_labels.xlsx")), 
     #                                pre = "Total Credit to Private Sector: ", post = " (million UGX)")
     # View(cbind(BOU_PSC[1], BOU_PSC_labs))
     # BOU_PSC[[1]] <- BOU_PSC_labs[[1]]
@@ -315,7 +315,7 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
     # 
     # for(i in sheets) {
     #   cat(i[[2]], fill = TRUE)
-    #   temp <- rm_miss(read_excel("data/raw/BOU_PSC.xls", sheet = i[[3]], skip = 3))
+    #   temp <- rm_miss(read_excel("rawdata/BOU_PSC.xls", sheet = i[[3]], skip = 3))
     #   temp <- rm_miss(temp[nmn(temp[[grep("Sector", names(temp))]]), grep("Sector", names(temp)):length(temp)])
     #   temp[[1]] <- gsub("PSC_",paste0("PSC_",i[[1]],"_"), BOU_PSC_labs[[1]])
     #   temp <- transpose(temp, keep.names = "Date", make.names = 1)
@@ -331,12 +331,12 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
     
   # Financial Soundness Indicators --------------------------------------
   link_BOU_FS <- "https://www.bou.or.ug/bou/bouwebsite/bouwebsitecontent/statistics/MonetaryStatistics/Financial_Soundness_Indicators.xls"
-  download.file(link_BOU_FS, destfile = "data/raw/BOU_FS.xls", mode = 'wb')
+  download.file(link_BOU_FS, destfile = "rawdata/BOU_FS.xls", mode = 'wb')
   
   # Quarterly
-  BOU_FS <- rm_miss(read_excel("data/raw/BOU_FS.xls", sheet = 2, skip = 3))
+  BOU_FS <- rm_miss(read_excel("rawdata/BOU_FS.xls", sheet = 2, skip = 3))
   BOU_FS <- rm_miss(BOU_FS[,-1])
-  BOU_FS_labs <- collapselabels(read_excel("data/raw/BOU_FS_labels.xlsx"))
+  BOU_FS_labs <- collapselabels(read_excel("rawdata/BOU_FS_labels.xlsx"))
   if(nrow(BOU_FS) != nrow(BOU_FS_labs)) stop("Names and size of data does not match")
   BOU_FS <- setNames(transpose(BOU_FS, keep.names = "Date"), c("Date", BOU_FS_labs$Variable))
   vlabels(BOU_FS)[-1] <- BOU_FS_labs$Label
@@ -348,7 +348,7 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
   
   
   # # Annualized
-  # BOU_FS_A <- rm_miss(read_excel("data/raw/Financial_Soundness_Indicators.xls", sheet = 3, skip = 3))
+  # BOU_FS_A <- rm_miss(read_excel("rawdata/Financial_Soundness_Indicators.xls", sheet = 3, skip = 3))
   # BOU_FS_A <- rm_miss(BOU_FS_A[,-1])
   # year <- as.numeric(names(BOU_FS_A))
   # if(nrow(BOU_FS_A) != nrow(BOU_FS_labs)) stop("Names and size of data does not match")
@@ -358,7 +358,7 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
   # rm(year)
   # 
   # # Annualized FY
-  # BOU_FS_AF <- rm_miss(read_excel("data/raw/Financial_Soundness_Indicators.xls", sheet = 4, skip = 5))
+  # BOU_FS_AF <- rm_miss(read_excel("rawdata/Financial_Soundness_Indicators.xls", sheet = 4, skip = 5))
   # BOU_FS_AF <- rm_miss(BOU_FS_AF[,-1])
   # FY <- qF(names(BOU_FS_AF))
   # if(nrow(BOU_FS_AF) != nrow(BOU_FS_labs)) stop("Names and size of data does not match")
@@ -373,10 +373,10 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
   
   # Terms of Trade -> monthly index included in selected macro indicators ! ----------------------------
   link_BOU_TOT <- "https://www.bou.or.ug/bou/bouwebsite/bouwebsitecontent/statistics/External_Sector_Statistics/Trade_Statistics/Terms-of-Trade.xls"
-  download.file(link_BOU_TOT, destfile = "data/raw/BOU_TOT.xls", mode = 'wb')
+  download.file(link_BOU_TOT, destfile = "rawdata/BOU_TOT.xls", mode = 'wb')
   
   # Monthly
-  BOU_TOT <- rm_miss(read_excel("data/raw/BOU_TOT.xls", sheet = 2, skip = 3))
+  BOU_TOT <- rm_miss(read_excel("rawdata/BOU_TOT.xls", sheet = 2, skip = 3))
   BOU_TOT <- transpose(rm_miss(BOU_TOT[,-1]), keep.names = "Date", make.names = 1)
   vlabels(BOU_TOT)[-1] <- paste(names(BOU_TOT)[-1], '(1999/2000 = 100)')
   names(BOU_TOT)[2:4] <- c("EXPI","IMPI","TOT")
@@ -385,7 +385,7 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
   attr(BOU_TOT, "updated") <- Sys.Date()
   
   # Dont need this: less data and earlier rebase index !
-  # temp <- rm_miss(read_excel("data/raw/Terms-of-Trade.xls", sheet = 3, skip = 3))
+  # temp <- rm_miss(read_excel("rawdata/Terms-of-Trade.xls", sheet = 3, skip = 3))
   # temp <- transpose(rm_miss(temp[,-(1:2)]), keep.names = "Date")
   # temp$Date <- as.Date.numeric(as.numeric(temp$Date), origin = "1899-12-30")
   # names(temp)[-1] <- c("EXPI_05","IMPI_05","TOT_05")
@@ -397,11 +397,11 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
   
   # Composition of Exports - Values and Volumes ------------------------------------
   link_BOU_EX_C <- "https://www.bou.or.ug/bou/bouwebsite/bouwebsitecontent/statistics/External_Sector_Statistics/Trade_Statistics/Composition-of-Exports_Values-and-Volumes.xlsx"
-  download.file(link_BOU_EX_C, destfile = "data/raw/BOU_EX_C.xlsx", mode = 'wb')
+  download.file(link_BOU_EX_C, destfile = "rawdata/BOU_EX_C.xlsx", mode = 'wb')
   
   # Monthly
-  BOU_EX_C <- read_excel("data/raw/BOU_EX_C.xlsx", sheet = 2, skip = 2)
-  BOU_EX_C_labs <- read_excel("data/raw/BOU_EX_C_labels.xlsx")
+  BOU_EX_C <- read_excel("rawdata/BOU_EX_C.xlsx", sheet = 2, skip = 2)
+  BOU_EX_C_labs <- read_excel("rawdata/BOU_EX_C_labels.xlsx")
   # rows <- seq_row(BOU_EX_C_labs)
   # View(cbind(BOU_EX_C[rows, 1:2], BOU_EX_C_labs))
   rows <- which(!is.na(BOU_EX_C_labs$Variable))
@@ -422,10 +422,10 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
 
   # Composition of Imports - Values and Volumes ------------------------------------
   link_BOU_IM_C <- "https://www.bou.or.ug/bou/bouwebsite/bouwebsitecontent/statistics/External_Sector_Statistics/Trade_Statistics/Composition-of-Imports_Values-and-Volume-Indices.xlsx"
-  download.file(link_BOU_IM_C, destfile = "data/raw/BOU_IM_C.xlsx", mode = 'wb')
+  download.file(link_BOU_IM_C, destfile = "rawdata/BOU_IM_C.xlsx", mode = 'wb')
   
   # Monthly Decomposition by product
-  BOU_IM_C <- rm_miss(read_excel("data/raw/BOU_IM_C.xlsx", sheet = 2, skip = 3))
+  BOU_IM_C <- rm_miss(read_excel("rawdata/BOU_IM_C.xlsx", sheet = 2, skip = 3))
   labs <- BOU_IM_C[[1]]
   BOU_IM_C <- rm_miss_row(get_vars(BOU_IM_C, -(1:2)))
   labs <- paste0(labs[attr(BOU_IM_C, "cc")], ": Value Imported (US$ millions)")
@@ -441,7 +441,7 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
   attr(BOU_IM_C, "updated") <- Sys.Date()
   
   # Monthly Decomposition Cost Insurance, Freight and Govn't Non-Govn't
-  BOU_IM_CIF <- rm_miss(read_excel("data/raw/BOU_IM_C.xlsx", sheet = 3, skip = 3))
+  BOU_IM_CIF <- rm_miss(read_excel("rawdata/BOU_IM_C.xlsx", sheet = 3, skip = 3))
   BOU_IM_CIF <- BOU_IM_CIF[!is.na(BOU_IM_CIF[[1]]), ]
   labs <- BOU_IM_CIF[[1]]
   BOU_IM_CIF <- rm_miss_row(get_vars(BOU_IM_CIF, -1))
@@ -466,11 +466,11 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
     
   # Destination of Exports - Values ------------------------------------
   link_BOU_EX_D <- "https://www.bou.or.ug/bou/bouwebsite/bouwebsitecontent/statistics/External_Sector_Statistics/Trade_Statistics/Direction-of-Trade_Exports.xlsx"
-  download.file(link_BOU_EX_D, destfile = "data/raw/BOU_EX_D.xlsx", mode = 'wb')
+  download.file(link_BOU_EX_D, destfile = "rawdata/BOU_EX_D.xlsx", mode = 'wb')
   
   # Monthly
-  BOU_EX_D <- rm_miss(read_excel("data/raw/BOU_EX_D.xlsx", sheet = 2, skip = 2))
-  BOU_EX_D_labs <- collapselabels(rm_miss(read_excel("data/raw/BOU_EX_D_labels.xlsx")), 
+  BOU_EX_D <- rm_miss(read_excel("rawdata/BOU_EX_D.xlsx", sheet = 2, skip = 2))
+  BOU_EX_D_labs <- collapselabels(rm_miss(read_excel("rawdata/BOU_EX_D_labels.xlsx")), 
                                   post = " (US$ million)", sep = " ")
   labs <- BOU_EX_D[[1]]
   BOU_EX_D <- rm_miss_row(get_vars(BOU_EX_D, -1))
@@ -486,14 +486,14 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
   
   # Origin of Imports - Values ------------------------------------
   link_BOU_IM_O <- "https://www.bou.or.ug/bou/bouwebsite/bouwebsitecontent/statistics/External_Sector_Statistics/Trade_Statistics/Direction-of-Trade_Imports.xlsx"
-  download.file(link_BOU_IM_O, destfile = "data/raw/BOU_IM_O.xlsx", mode = 'wb')
+  download.file(link_BOU_IM_O, destfile = "rawdata/BOU_IM_O.xlsx", mode = 'wb')
   
   # Monthly
-  BOU_IM_O <- rm_miss(read_excel("data/raw/BOU_IM_O.xlsx", sheet = 2, skip = 2))
+  BOU_IM_O <- rm_miss(read_excel("rawdata/BOU_IM_O.xlsx", sheet = 2, skip = 2))
   labs <- BOU_IM_O[[1]]
   BOU_IM_O <- rm_miss_row(dapply(get_vars(BOU_IM_O, -1), as.numeric))
   labs <- labs[attr(BOU_IM_O, "cc")]
-  BOU_IM_O_labs <- rm_miss(read_excel("data/raw/BOU_IM_O_labels.xlsx"))
+  BOU_IM_O_labs <- rm_miss(read_excel("rawdata/BOU_IM_O_labels.xlsx"))
   View(cbind(labs, BOU_IM_O_labs))
   BOU_IM_O_labs$Variable <- paste0("IM_", BOU_IM_O_labs$Variable, "_VAL")
   BOU_IM_O_labs <- collapselabels(BOU_IM_O_labs, pre = "Value Imported from ", post = " (US$ million)", sep = " ")
@@ -510,17 +510,17 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
   
   # CPI (Total and Decomposed) -------------------------------
   link_BOU_CPI <- "https://www.bou.or.ug/bou/bouwebsite/bouwebsitecontent/statistics/RealSector/CPI_Inflation-Rates_BOU-Website.xls"
-  download.file(link_BOU_CPI, destfile = "data/raw/BOU_CPI.xls", mode = 'wb')
+  download.file(link_BOU_CPI, destfile = "rawdata/BOU_CPI.xls", mode = 'wb')
   
   # Monthly: Do 2009/10 = 100 -> better coverage !
-  BOU_CPI <- rm_miss(read_excel("data/raw/BOU_CPI.xls", sheet = 4, skip = 5))[1:4,-1]
+  BOU_CPI <- rm_miss(read_excel("rawdata/BOU_CPI.xls", sheet = 4, skip = 5))[1:4,-1]
   BOU_CPI[[1]] <- paste0("Consumer Price Index (CPI), (2009/10 = 100): ",BOU_CPI[[1]]," (weight = ",round(BOU_CPI[[2]],2),")")
   BOU_CPI[[2]] <- NULL
   BOU_CPI <- transpose(rm_miss(BOU_CPI), keep.names = "Date", make.names = 1)
   vlabels(BOU_CPI) <- names(BOU_CPI)
   names(BOU_CPI)[-1] <- c("CPI_FOOD","CPI_CORE","CPI_EFU","CPI")
   setcolorder(BOU_CPI, c(1,5,3,2,4))
-  temp <- rm_miss(read_excel("data/raw/BOU_CPI.xls", sheet = 5, skip = 5))[1:13, -2]
+  temp <- rm_miss(read_excel("rawdata/BOU_CPI.xls", sheet = 5, skip = 5))[1:13, -2]
   temp[[1]] <- paste0("Consumer Price Index (CPI), (2009/10 = 100): ",temp[[1]]," (weight = ",round(temp[[2]],2),")")
   temp[[2]] <- NULL
   temp <- transpose(rm_miss(temp), keep.names = "Date", make.names = 1)
@@ -536,10 +536,10 @@ download.file(link_BOU_MMI, destfile = "data/raw/BOU_MMI.xlsx", mode = 'wb')
 
   # Business Tendency Indicator (BTI) -------------------------------
   link_BOU_BTI <- "https://www.bou.or.ug/bou/bouwebsite/bouwebsitecontent/statistics/RealSector/Business-Tendency-Indicators.xlsx"
-  download.file(link_BOU_BTI, destfile = "data/raw/BOU_BTI.xlsx", mode = 'wb')
+  download.file(link_BOU_BTI, destfile = "rawdata/BOU_BTI.xlsx", mode = 'wb')
   
   # Monthly: Could also do 2009/10 = 100. Any difference ?? 
-  BOU_BTI <- rm_miss(read_excel("data/raw/BOU_BTI.xlsx", skip = 2))
+  BOU_BTI <- rm_miss(read_excel("rawdata/BOU_BTI.xlsx", skip = 2))
   temp <- BOU_BTI[[1]]
   BOU_BTI <- rm_miss_row(BOU_BTI[-1])
   temp <- temp[attr(BOU_BTI, "cc")]

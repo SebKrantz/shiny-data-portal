@@ -33,8 +33,9 @@ web-server at www.shinyapps.io, or hosted locally using shiny server
 * /data : A directory containing the data hosted in the app. Data is saved in .RData files generated from get_data.R. These files are loaded in app.R.
           In addition the directory contains two excel sheets: datasources.xlsx and datasets.xlsx. These are used to provide information about the data
           in the application. The format of these sheets should be kept (also the column names). It is important that the column 'DSID' in datasets.xlsx
-          matches the names of the datasets daved in the .RData files. The subfolder /raw was created to save any temporary files from get_data.R, 
-          or to place any locally supplied raw data which can be read into R and processed with get_data.R.
+          matches the names of the datasets daved in the .RData files. 
+          
+* /rawdata : (Optinal) folder to save any temporary files from get_data.R, or to place any locally supplied raw data which can be read into R and processed with get_data.R.
 
 * /www : A directory containing the logo for the app as a png file, and any other web-content for the app. 
    
