@@ -166,7 +166,6 @@ ui <- bootstrapPage('', # Can run print(ui) to see the HTML code for the website
                           p("The app was built using the 'shiny' web-application framework in R (and some small custom HTML and CSS). 
                              It is currently serviced with macroeconomic data for Uganda downloaded and with various sources using various R API packages (IMFData, wbstats, Rilostat, tradestatistics) as well as data from the Bank of Uganda. 
                              The app was built by Sebastian Krantz (ODI Fellow in the Ugandan Ministry of Finance, Planning and Economic Development 2020/21).") 
-                          # Source code is available on github and released under a GPL 2.0 license (so it may be appropriated and adapted by other organizations under certain conditions). "),
                  )
       )
   )
