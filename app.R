@@ -159,11 +159,13 @@ ui <- bootstrapPage('', # Can run print(ui) to see the HTML code for the website
                  # About tab (can include more sections and useful links), see ?shiny::tags
                  tabPanel("About",
                           h3("Purpose of the Portal"),
-                          p("The Data Portal was built for ..."),
-                          h3("Technical Details"),
-                          p("The Portal was built using the shiny web-application framework in R (and some custom HTML and CSS). 
-                             It is serviced with data downloaded and processed from various sources using various R API packages (IMFData, wbstats, Rilostat, tradestatistics) and data from some internal sources. 
-                             The app was built by Sebastian Krantz (ODI Fellow 2020/21).") 
+                          p('A free Shiny Application to host, filter, aggregate and and download data in various formats. 
+                            It can be set up by anyone for any purpose and with any data using the source code and instructions (README.md) available on gitub:'),
+                          a("Source Code", href = "https://github.com/SebKrantz/shiny-data-portal"),
+                          h3("Details"),
+                          p("The app was built using the 'shiny' web-application framework in R (and some small custom HTML and CSS). 
+                             It is currently serviced with macroeconomic data for Uganda downloaded and processed from various sources using various R API packages (IMFData, wbstats, Rilostat, tradestatistics) as well as data from the Bank of Uganda. 
+                             The app was built by Sebastian Krantz (ODI Fellow in the Ugandan Ministry of Finance, Planning and Economic Development 2020/21).") 
                           # Source code is available on github and released under a GPL 2.0 license (so it may be appropriated and adapted by other organizations under certain conditions). "),
                  )
       )
