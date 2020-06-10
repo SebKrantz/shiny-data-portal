@@ -1,0 +1,125 @@
+/* 
+CSS Stylesheet for the App 
+Learn CSS at: https://www.w3schools.com/css/
+*/
+
+/* This is the Navigation bar itself */
+.navbar-default { 
+  background-color: #262626;
+  margin-top: 0;
+  margin-bottom: 0;
+  border: 0;
+  font-size: 13px;
+}
+/* This regulates colour of navigation bar items and hovering effect over */
+.navbar-default .navbar-nav > li > a {
+  color: #999999
+}
+.navbar-default .navbar-nav > li > a:hover {
+    color: #ffffff
+}
+/* This is the tab panel on the top bar, when selected or clicked on */
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #ffffff;
+    background: #666666;
+} 
+/* This is the Title of the Website */
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+  color: #f2f2f2 
+}
+
+/* Tabs in Main or side panel */
+.tabbable > .nav > li > a {
+  background-color: transparent;  
+  color:#0067e6; 
+  border: 0
+}
+.tabbable > .nav > li[class=active] > a {
+  background-color: #0067e6; 
+  color:white; 
+  border: 0
+}
+
+/* Main Panels */
+#side {
+  background-color: #404040; 
+  color: #d9d9d9;
+  zoom: 1; 
+  padding: 1%;
+  right: auto;
+  width: 20%;
+  min-height: 100%;
+  height: auto;
+  /* position: absolute;  Already inserted by absolutepanel. */
+  overflow-y: auto;
+}
+
+#main {
+  padding: 1%;
+  left: 20%;
+  width: 80%;
+  height: 100%;
+}
+
+/* Tables */
+table, td {
+    margin-top: 10px;
+    caption-side: bottom;
+}
+
+.summarytable {
+    margin-top: 10px;
+    caption-side: bottom;
+    white-space: nowrap;
+    height: 90vh; 
+    overflow-y: auto  /* scroll */
+}
+
+.indicatortable {
+    margin-top: 10px;
+    caption-side: bottom;
+    white-space: nowrap;
+    height: 90vh; 
+    overflow-x: hidden; /* scrolling already enabled on server ... */ 
+    overflow-y: auto  /*scroll */
+}
+
+#DATAtable th {
+    font-weight: normal;
+}
+
+/* headers */ 
+h1, h2, h3, h4, h5, h6 {
+  color: #FF6600; 
+  padding-top: 10px; /* 10px */
+}
+
+/* Text output */
+.shiny-text-output {
+  width: 100%; 
+  height: 90vh; 
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+/* plot output: https://stackoverflow.com/questions/26782041/scaling-shiny-plots-to-window-height */
+.shiny-plot-output {
+  height:  90vh !important; 
+} 
+
+/* Correct line-wrapping or radio buttons: https://stackoverflow.com/questions/25730961/bootstrap-radio-inline-line-wrapping-and-stacked-radio-buttons/25732098 */ 
+.radio-inline+.radio-inline {
+    margin-left: 0;
+}
+.radio-inline {
+    margin-right: 10px;
+} 
+
+/* min and max displayed on top of sliders: https://github.com/rstudio/shiny/blob/master/inst/www/shared/ionrangeslider/css/ion.rangeSlider.skinHTML5.css */
+.irs-min, .irs-max {
+    color: #d9d9d9;
+ }
