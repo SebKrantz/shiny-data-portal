@@ -54,4 +54,4 @@ the requested data, the rest of the code is generic. For the cases where multipl
 the respective entry in ui_code.R has to be edited or removed. Finally, make sure app.R loads your files correctly and see if the generated Dataset description frame
 (`DS_DESC_UPDATED`) and indicators overview table (`IND_OV`) are sensible. 
 
-Play around with the application to see if everything works find the way you set up up. Once you have created a shinyapps.io account, you can manage and deploy the app from inside Rstudio.
+Play around with the application to see if everything works find the way you set up up. Once you have created a shinyapps.io account, you can manage and deploy the app from inside Rstudio. 
