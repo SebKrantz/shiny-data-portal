@@ -86,7 +86,7 @@ div(class="outer",
                                                       selectizeInput("aggIDvars", "Aggregator ID Variables", choices = c("Choose variables to aggregate by" = ""), multiple = TRUE),
                                                       # List of available functions to aggregate numeric data ('collapse' package fast functions). Multiple can be selected. Any categorical data will be aggregated with the statistical mode (default set on the server side).
                                                       bsPopover(id = "aggfunshelp", title = "Aggregator Functions and Formats", 
-                                                                content =  'Functions chosen will be applied to numeric columns in the data. Unless the box "Drop Categorical Variables" is checked, categorical columns are aggregated using the statistical mode i.e. the most frequently ocurring value, which selects the first value if all elements are equal or distinct. Multiple aggregator functions can be selected. In that case either columns will be prefixed with the function names, or stacked if the box "Long Format" is checked.',
+                                                                content =  'Functions chosen will be applied to numeric columns in the data. Unless the box "Drop Categorical Variables" is checked, categorical columns are aggregated using the statistical mode i.e. the most frequently ocurring value, which selects the first value if all elements are equal or distinct. Multiple aggregator functions can be selected. In that case either columns will be prefixed with the function names, or stacked if the box "Long Format" is checked. If "Remove Missing Values" is checked, statistics are computed on the non-missing values in each group.',
                                                                 placement = "right", 
                                                                 trigger = "focus", 
                                                                 options = list(container = "body")
@@ -107,6 +107,7 @@ div(class="outer",
                                                                                         `number of distinct values` = "fNdistinct"), selected = "fmean", multiple = TRUE),
                                                       conditionalPanel(condition = "input.aggfuns.length > 1", # this is a JavaScript expression: If more than one aggregator function, display option to reshape data to long format.
                                                                        checkboxInput("aggregate_long", "Long Format")),
+                                                      checkboxInput("aggregatenarm", "Remove Missing Values", value = TRUE),
                                                       checkboxInput("aggregatedropcat", "Drop Categorical Variables"),
                                                       checkboxInput("aggregatekeepcolord", "Preserve Column Order", value = TRUE),
                                                       bsButton("applyaggregate", "Aggregate", type = "toggle", style = "primary")

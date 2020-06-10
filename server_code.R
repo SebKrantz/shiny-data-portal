@@ -103,6 +103,7 @@ DATA <- reactive({  # DATASET WITH SELECTED VARIABLES
     # Aggregate
     if(input$applyaggregate && input$aggregate && !is.null(input$aggIDvars)) {
         out <- collapv(out, input$aggIDvars, input$aggfuns, fmode, # If applicable, categorical data is aggregated with the statistical mode (which defaults to the first value if all elements are distinct or identical)
+                       na.rm = input$aggregatenarm,
                        cols = if(input$aggregatedropcat) is.numeric else NULL, # Option to drop categorical data
                        keep.col.order = input$aggregatekeepcolord,
                        return = if(length(input$aggfuns) == 1L || !input$aggregate_long) # When multiple functions are selected, a long format can be returned. categorical data is duplicated if applicable.
