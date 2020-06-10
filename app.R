@@ -111,7 +111,7 @@ renameSTATA <- function(x) {
 }
 
 
-# This creates the website, integrating the code in ui.R, which creates the 'Data Access' tab.
+# This creates the website, integrating the code in ui_code.R, which creates the 'Data Access' tab.
 
 # Set title and provide logo for application
 title <- "My Data Portal"
@@ -171,7 +171,7 @@ ui <- bootstrapPage('', # Can run print(ui) to see the HTML code for the website
   )
 
 
-# This reads the server side code in server.R and creates the server function.
+# This reads the server side code in server_code.R and creates the server function.
 server <- function(input, output, session) {
 
   source(file.path("server_code.R"), local = TRUE)$value
