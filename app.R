@@ -25,7 +25,6 @@ options(digits = 3L,
 load("load_all.RData")
 
 # Small functions to help process data on the server side 
-fsetdiff <- function(x, y) x[match(x, y, 0L) == 0L]
 selectvars <- function(x, v, exc = FALSE) {
   if(exc) v <- -ckmatch(v, names(x))
   get_vars(x, v)
