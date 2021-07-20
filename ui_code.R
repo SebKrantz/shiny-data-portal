@@ -74,7 +74,7 @@ div(class="outer",
                                                                 trigger = "focus", 
                                                                 options = list(container = "body")
                                                       ),
-                                      textInput("filterInput", HTML("Filter Query    <button id='filterhelp' type='button' class='btn btn-primary action-button btn-xs'><i class='fa fa-question'></i></button>")),
+                                      textInput("filterInput", HTML("Filter Query    <button id='filterhelp' type='button' class='btn btn-primary action-button btn-xs'><i class='fa fa-question'></i></button>"), placeholder = 'e.g. Year > 2000 & Quarter == "Q4"'),
                                       # Need an extra 'Apply Filter' checkbox, otherwise application reacts immediately while we are typing the filter query.
                                       bsButton("applyfilter", "Apply Filter", type = "toggle", style = "primary"),
                                      ),
