@@ -11,20 +11,23 @@ Learn CSS at: https://www.w3schools.com/css/
   border: 0;
   font-size: 13px;
 }
+
 /* This regulates colour of navigation bar items and hovering effect over */
 .navbar-default .navbar-nav > li > a {
   color: #999999
 }
 .navbar-default .navbar-nav > li > a:hover {
-    color: #ffffff
+  color: #ffffff
 }
+
 /* This is the tab panel on the top bar, when selected or clicked on */
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
-    color: #ffffff;
-    background: #666666;
+  color: #ffffff;
+  background: #666666;
 } 
+
 /* This is the Title of the Website */
 .navbar-default .navbar-brand,
 .navbar-default .navbar-brand:hover,
@@ -120,6 +123,22 @@ h1, h2, h3, h4, h5, h6 {
 } 
 
 /* min and max displayed on top of sliders: https://github.com/rstudio/shiny/blob/master/inst/www/shared/ionrangeslider/css/ion.rangeSlider.skinHTML5.css */
-.irs-min, .irs-max {
+.irs--shiny .irs-min, .irs--shiny .irs-max, .irs--shiny .irs-grid-text {
     color: #d9d9d9;
  }
+
+/* This is for the 'About' page: Restricting content width and styling the footer with the copyright */
+.AboutContent {
+    max-width: 1250px; 
+    margin: auto;
+    border: none;
+    padding: 30px;
+    background-size: cover;
+    margin-top: 0; 
+}
+
+footer {
+  color: #999; 
+  text-align: center;
+  padding: 20px;
+}

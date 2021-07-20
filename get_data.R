@@ -26,7 +26,7 @@ collapselabels <- function(x, pre = NA, post = NA, sep = ": ", na.rm = TRUE) {
 rgrep <- function(exp, nam, ...) if(length(exp) > 1L) unlist(lapply(exp, grep, nam, ...), use.names = FALSE) else grep(exp, nam, ...)
 dateexpand <- function(x, day = FALSE, origin = "1899-12-30", remove.missing.date = TRUE, sort = TRUE) {
   getFY <- function(y, m) { 
-    fy <- ifelse(as.integer(m) >= 7L, y, y-1)
+    fy <- fifelse(as.integer(m) >= 7L, y, y-1)
     fy <- paste(fy, substr(as.character(fy+1), 3, 4), sep = "/")
     qF(fy, na.exclude = FALSE)
   }
@@ -36,7 +36,7 @@ dateexpand <- function(x, day = FALSE, origin = "1899-12-30", remove.missing.dat
     structure(ceiling(mod/3), levels = paste0("Q",1:4), class = c("ordered","factor"))
   }
   vl <- vlabels(x)
-  if(!is.Date(x[[1]])) x[[1]] <- as.Date.numeric(as.numeric(x[[1]]), origin = origin)
+  if(!is_date(x[[1]])) x[[1]] <- as.Date.numeric(as.numeric(x[[1]]), origin = origin)
   if(remove.missing.date) if(any(na <- is.na(x[[1]]))) x <- x[!na, , drop = FALSE]
   y <- as.numeric(substring(x[[1]], 1, 4))
   m <- as.integer(substring(x[[1]], 6, 7))
@@ -142,7 +142,7 @@ download.file(link_BOU_MMI, destfile = "rawdata/BOU_MMI.xlsx", mode = 'wb')
   BOU_MMI_AF <- rm_miss(get_vars(BOU_MMI_AF, -1))
   if(nrow(BOU_MMI_AF) != nrow(BOU_MMI_labs)) stop("Names and size of data does not match")
   BOU_MMI_AF <- transpose(cbind(BOU_MMI_labs[1], BOU_MMI_AF), keep.names = "FY", make.names = 1)
-  BOU_MMI_AF$FY <- ifelse(as.numeric(substr(BOU_MMI_AF$FY, 1, 2)) > 60,  
+  BOU_MMI_AF$FY <- fifelse(as.numeric(substr(BOU_MMI_AF$FY, 1, 2)) > 60,  
                           paste0("19",BOU_MMI_AF$FY), 
                           paste0("20",BOU_MMI_AF$FY))
   BOU_MMI_AF$FY <- qF(BOU_MMI_AF$FY)
@@ -593,7 +593,7 @@ download.file(link_BOU_MMI, destfile = "rawdata/BOU_MMI.xlsx", mode = 'wb')
     if(any(misst <- is.na(x$TIME_PERIOD))) x <- x[!misst, , drop = FALSE]
     x$OBS_VALUE <- as.numeric(x$OBS_VALUE)
     x <- tidyr::pivot_wider(x, id_cols = ids, values_from = "OBS_VALUE", names_from = indicator)
-    if(!all(ccol <- fNobs(x) > 0 & fNdistinct(x) > 1)) x <- get_vars(x, ccol)
+    if(!all(ccol <- fnobs(x) > 0 & fndistinct(x) > 1)) x <- get_vars(x, ccol)
     nid <- length(ids)-1L
     if(!all(cc <- rowSums(!is.na(get_vars(x, -seq_len(nid)))) > 0)) x <- x[cc, , drop = FALSE]
     switch(time[1L],
@@ -1011,7 +1011,7 @@ download.file(link_BOU_MMI, destfile = "rawdata/BOU_MMI.xlsx", mode = 'wb')
     naml <- unique(get_vars(x, c("indicatorID","indicator")))  
     res <- dcast(qDT(x), as.formula(paste0(timevar, " ~ indicatorID")), value.var = vv)
     res[[1L]] <- switch(newtv, Year = as.numeric(res[[1L]]), as.Date(res[[1L]]))
-    get_vars(res, fNobs(res) <= 1L) <- NULL
+    get_vars(res, fnobs(res) <= 1L) <- NULL
     vlabels(res) <- c(newtv, naml[[2L]][collapse:::ckmatch(names(res)[-1], naml[[1L]], "Unmatched series:")])
     names(res) <- c(newtv, gsub("\\.", "_", names(res)[-1]))
     return(switch(newtv, Date = dateexpand(res), res))

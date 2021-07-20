@@ -3,81 +3,31 @@
 ##############################
 
 # Required R Packages
+suppressPackageStartupMessages({
 library(shiny)      # Shiny: The Web application framework we are working with
 library(shinyBS)    # Shiny Bootstrap: Bootstrap web themes and features for shiny
 library(DT)         # A wrapper for JavaScript library 'DataTables'
 library(haven)      # Read and write STATA, SPSS and SAS files
 library(readr)      # Read and write CSV and TSV/TAB files
-library(readxl)     # Read excel
 library(writexl)    # Write excel
 library(ggcorrplot) # Fancy plot of correlation matrix
 library(qtlcharts)  # Fancy interactive plot of correlation matrix + scatter chart
 library(collapse)   # Fast Data Manipulation and Transformation
+})
 
 # Some global options affecting appearance
-options(digits = 3L, width = 100L)
-options(htmlwidgets.TOJSON_ARGS = list(na = 'string', digits = 6L)) # better option ?
+options(digits = 3L, 
+        width = 100L,
+        htmlwidgets.TOJSON_ARGS = list(na = 'string', digits = 6L), # better option ?
+        shiny.sanitize.errors = FALSE) # This makes sure shiny displays any error messages
 
-# Make sure the working directory is set to the data portal project folder
-getwd()
-# setwd("C:/Users/Sebastian Krantz/...")
-
-# Load All the Datsets from Different Sources, downloaded and processed in get_data.R
-load("data/BOU.RData")
-load("data/IMF.RData")
-load("data/WB.RData")
-load("data/ILO.RData")
-load("data/OTS_UN_COMT.RData")
-
-# Load Administrative Information about the data
-DS_DESC <- read_excel("data/datasets.xlsx")
-DS_SRC <- read_excel("data/datasources.xlsx")
-
-# Updating Dataset Description: Adding links and latest data availability
-dataset_ov <- function(X) {
-  res <- unlist2d(lapply(as.list(X$DSID), function(y) {
-    dat <- get(y)
-    url <- attr(dat, "url")
-    upd <- attr(dat, "updated")
-    `oldClass<-`(list(Dataset = if(is.null(url)) NA_character_ else url,
-         Updated = if(is.null(upd)) NA_real_ else as.double(upd)), "data.frame")
-  }), FALSE)
-  attributes(res[[2L]]) <- attributes(Sys.Date())
-  linked <- !is.na(res$Dataset)
-  res$Dataset[linked] <- paste0('<a href = "', res$Dataset[linked], '"> ', X$Dataset[linked], '</a>')
-  res$Dataset[!linked] <- X$Dataset[!linked]
-  return(add_vars(res, get_vars(X, c('Frequency', 'Description', 'Dataset Source')),
-                  pos = c(2L, 4:5)))
-}
-
-DS_DESC_UPDATED <- dataset_ov(DS_DESC)
-
-# Creating an Indicators table, counting number of observations for each indicator (more sophisticated information such as start and end date for each indicator can be added... if data is formatted in a uniform way)
-indicator_ov <- function(X, dsn, src) {
-  X <- unclass(get(X)) 
-  nam <- names(X)
-  ntd <- function(x) if(length(x)) x else "-"
-  ff <- function(x) c(ntd(attr(x, "label")), ntd(attr(x, "source")))
-  lx <- length(X)
-  res <- unclass(qDF(setColnames(t(vapply(X, ff, character(2))), 
-                                 c("Label", "Source")), "Variable"))
-  return(qDF(c(res[1:2], list(Nobs = fNobs.data.frame(X), Dataset = rep(dsn, lx), 
-               `Dataset Source` = rep(src, lx)), res[3L])))
-}
-
-IND_OV <- unlist2d(Map(indicator_ov, 
-                       DS_DESC$DSID, 
-                       DS_DESC$Dataset, 
-                       DS_DESC$`Dataset Source`), FALSE)
-
-
-
+# Load Data
+load("load_all.RData")
 
 # Small functions to help process data on the server side 
 fsetdiff <- function(x, y) x[match(x, y, 0L) == 0L]
-fnames <- function(x) attr(x, "names")
 selectvars <- function(x, v, exc = FALSE) {
-  if(exc) v <- -ckmatch(v, fnames(x))
+  if(exc) v <- -ckmatch(v, names(x))
   get_vars(x, v)
 }
 vlabdf <- function(X) {
@@ -92,13 +42,13 @@ vlabclsrc <- function(X) {
                   c("Class (Storage Mode)", "Label", "Source")), "Variable")
 }
 namlabHTML <- function(df) {
-  if(is.list(df) && length(df) > 1L) names(df) <- paste0("<b>", fnames(df), "</b> <br> <small>", vlabdf(df), "</small>")
+  if(is.list(df) && length(df) > 1L) names(df) <- paste0("<b>", names(df), "</b> <br> <small>", vlabdf(df), "</small>")
   df
 }
 mysummary <- function(df, labels = TRUE) {
   ord <- as.integer(c(3,1,4,2,5,6,7,8,9))
-  sumf <- function(x) if(is.numeric(x)) c(fNdistinct.default(x), fmedian.default(x), qsu.default(x, higher = TRUE))[ord] else
-                                        c(fNobs.default(x), fNdistinct.default(x), rep(NA_real_,7L))
+  sumf <- function(x) if(is.numeric(x)) c(fndistinct.default(x), fmedian.default(x), qsu.default(x, higher = TRUE))[ord] else
+                                        c(fnobs.default(x), fndistinct.default(x), rep(NA_real_, 7L))
   res <- t(vapply(df, sumf, numeric(9)))
   colnames(res) <- c("N","Distinct","Mean","Median","SD","Min","Max","Skewness","Kurtosis")
   res <- qDF(print.qsu(res, return = TRUE), "Variable")
@@ -106,7 +56,7 @@ mysummary <- function(df, labels = TRUE) {
   return(res)
 }
 renameSTATA <- function(x) {
-  names(x) <- gsub("\\.", "_", fnames(x))
+  names(x) <- gsub("\\.", "_", names(x))
   x
 }
 
@@ -158,15 +108,20 @@ ui <- bootstrapPage('', # Can run print(ui) to see the HTML code for the website
                  
                  # About tab (can include more sections and useful links), see ?shiny::tags
                  tabPanel("About",
+                          div(class = "AboutContent",
                           h3("Purpose of the Portal"),
                           p('A free Shiny Application to host, filter, aggregate and and download data in various formats. 
                             It can be set up by anyone for any purpose and with any data using the source code and instructions (README.md) available on Github:'),
-                          a("Source Code", href = "https://github.com/SebKrantz/shiny-data-portal"),
+                          a("Source Code", href = "https://github.com/SebKrantz/shiny-data-portal", target = "_blank"),
                           h3("Details"),
                           p("The app was built using the 'shiny' web-application framework in R (and some small custom HTML and CSS). 
                              It is currently serviced with macroeconomic data for Uganda downloaded and with various sources using various R API packages (IMFData, wbstats, Rilostat, tradestatistics) as well as data from the Bank of Uganda. 
                              The app was built by Sebastian Krantz (ODI Fellow in the Ugandan Ministry of Finance, Planning and Economic Development 2020/21).") 
                           # Source code is available on github and released under a GPL 2.0 license (so it may be appropriated and adapted by other organizations under certain conditions). "),
+                          ),
+                          tags$footer(
+                            HTML("Copyright &copy; 2021, Sebastian Krantz")
+                          )
                  )
       )
   )
